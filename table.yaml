@@ -1,0 +1,27 @@
+#结构体定义
+Table:
+  Company:
+    #结构体字段及类型
+    field: [
+      "gorm.Model",
+      "Name string",
+      "Abbreviation string",
+      "CompanyTypeId int",
+      "Sort int",
+      "State int",
+      "CompanyNum string"
+    ]
+    #结构体引入外部包
+    import: ["github.com/jinzhu/gorm"]
+    #结构体所属包
+    package: models
+  User:
+    field: [
+      "gorm.Model",
+      "UserName string",
+      "Password string",
+    ]
+    import: ["github.com/jinzhu/gorm"]
+    package: models
+#结构体保存路径
+ModelPath: C:/work/moduleswork/elasticsearch/models

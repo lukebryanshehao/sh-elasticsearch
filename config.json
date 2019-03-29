@@ -1,0 +1,10 @@
+{
+  "Port":"8080",
+  "UserName":"root",
+  "Password":"123456",
+  "Ip":"localhost",
+  "DBPort":"3306",
+  "DBName":"test",
+  "ESHost":"http://localhost:9200/",
+  "BuildIndexStructs":["",""]
+}
