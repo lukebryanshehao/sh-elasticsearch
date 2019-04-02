@@ -72,7 +72,7 @@ func init() {
 	}
 	fmt.Printf("Elasticsearch version %s\n", esversion)
 
-	//数据库
+	//Database
 	path := strings.Join([]string{Config.UserName, ":", Config.Password, "@tcp(", Config.Ip, ":", Config.DBPort, ")/", Config.DBName, "?charset=utf8&parseTime=true"}, "")
 	db, err = gorm.Open("mysql", path)
 	if err != nil {

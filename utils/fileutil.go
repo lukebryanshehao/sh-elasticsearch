@@ -55,11 +55,11 @@ content	内容		Hello World!\r\n
 func CreateFile(file string,content string) bool {
 	//写入文件
 	f, error := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0766)
-	defer f.Close()
 	if error != nil {
 		log.Print(error)
 		return false
 	}
+	defer f.Close()
 	_,err := f.Write([]byte(content))
 	if err != nil {
 		log.Print(err)
@@ -90,5 +90,4 @@ func MkDirs(dir string) bool {
 			return true
 		}
 	}
-	return false
 }

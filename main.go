@@ -31,8 +31,12 @@ type Car struct {
 }
 
 func main() {
+	defer func() {
+		conf.GetDB().Close()
 
-	//tableStrings := []string{"mst_expert"}
+	}()
+	//tableStrings := []string{"company","category","mst_expert"}
+	//tableStrings := []string{"company"}
 	//
 	//for i := range tableStrings {
 	//	results,success := esService.Create(tableStrings[i])
@@ -50,10 +54,16 @@ func main() {
 	//fmt.Println(sql)
 
 
-	text := "博客园导读本文首先简单介绍了自然语言处理和科研过程中重要的四部曲"
-	companys := searchService.SearchCompanys(text)
-	for i := range companys{
-		fmt.Println(companys[i])
+	text := "中"
+	searchFields := make([]string,1)
+	searchFields[0] = "abbreviation"
+	//searchFields[1] = "name"
+	resultList := searchService.Search(text,"company",searchFields)
+	for i := range resultList.CompanyList{
+		fmt.Println(resultList.CompanyList[i])
+	}
+	for i := range resultList.UserList{
+		fmt.Println(resultList.UserList[i])
 	}
 
 	//c:=make(chan struct{})

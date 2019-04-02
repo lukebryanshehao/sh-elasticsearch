@@ -10,7 +10,9 @@ import (
 	"elasticsearch/conf"
 	"elasticsearch/utils"
 	"encoding/json"
+	"fmt"
 	"github.com/spf13/cast"
+	"log"
 	"sync"
 )
 
@@ -33,12 +35,19 @@ func (e elasticService) Create(table string) (map[int]map[string]interface{},boo
 	rows,_ := conf.GetDB().Table(table).Rows()
 	//返回所有列
 	columns,_ := rows.Columns()
+	columnsTypes,_ := rows.ColumnTypes()
+	columnsTypeMaps := make(map[string]string, len(columnsTypes))
+	for i := range columnsTypes{
+		fmt.Println("columnsTypes:  ",columnsTypes[i].Name(),columnsTypes[i].DatabaseTypeName())
+		columnsTypeMaps[columnsTypes[i].Name()] = columnsTypes[i].DatabaseTypeName()
+	}
+
 	//这里表示一行所有列的值，用[]byte表示
 	vals := make([][]byte, len(columns))
 	//这里表示一行填充数据
 	scans := make([]interface{}, len(columns))
 	//这里scans引用vals，把数据填充到[]byte里
-	for k, _ := range vals {
+	for k := range vals {
 		scans[k] = &vals[k]
 	}
 
@@ -46,14 +55,41 @@ func (e elasticService) Create(table string) (map[int]map[string]interface{},boo
 	result := make(map[int]map[string]interface{})
 	for rows.Next() {
 		//填充数据
-		rows.Scan(scans...)
+		err := rows.Scan(scans...)
+		if err != nil {
+			log.Println(err)
+		}
 		//每行数据
 		row := make(map[string]interface{})
 		//把vals中的数据复制到row中
 		for k, v := range vals {
 			key := columns[k]
 			//这里把[]byte数据转成string
-			row[key] = string(v)
+			//row[key] = string(v)
+			dataType := columnsTypeMaps[key]
+			//"VARCHAR", "TEXT", "NVARCHAR", "DECIMAL", "BOOL", "INT", "BIGINT"
+			switch dataType {
+
+				case "VARCHAR":
+					row[key] = string(v)
+				case "TEXT":
+					row[key] = string(v)
+				case "NVARCHAR":
+					row[key] = string(v)
+				case "DECIMAL":
+					row[key] = cast.ToString(string(v))
+				case "BOOL":
+					row[key] = cast.ToBool(string(v))
+				case "INT":
+					row[key] = cast.ToInt(string(v))
+				case "BIGINT":
+					row[key] = cast.ToUint(string(v))
+				case "TIMESTAMP":
+					row[key] = string(v)
+				default:
+					row[key] = string(v)
+			}
+
 		}
 		//放入结果集
 		result[i] = row

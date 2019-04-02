@@ -7,7 +7,7 @@ type Company struct {
 	DeletedAt string `sql:"index"`
 	Name string
 	Abbreviation string
-	CompanyTypeId int
+	CompanyTypeId uint
 	Sort int
 	State int
 	CompanyNum string

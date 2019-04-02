@@ -9,7 +9,6 @@ package main
 import (
 	"elasticsearch/utils"
 	"fmt"
-	"github.com/spf13/cast"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"strings"
